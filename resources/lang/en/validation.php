@@ -101,6 +101,19 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'username' => [
+            'required' => 'Username is required!',
+            'unique' => 'Whooops! Username already exists',
+            'max' => 'Username may not be longer than :max characters',
+        ],
+        'first_name' => [
+            'required' => 'First Name is required!',
+            'max' => 'First Name may not be longer than :max characters',
+        ],
+        'last_name' => [
+            'required' => 'Last Name is required!',
+            'max' => 'Last Name may not be longer than :max characters',
+        ],
     ],
 
     /*
