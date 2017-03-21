@@ -8,6 +8,7 @@
 			<hr/>
 			@include('includes.success')
 			@include('includes.error')
+			@include('includes.info')
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					Login
@@ -43,6 +44,7 @@
 						</div>
 					</form>
 					<p><a href="{{ route('register') }}">Register</a></p>
+					<p><a href="{{ route('password_reset') }}">Forgot Password?</a></p>
 				</div>
 			</div>
 		</div>

@@ -47,3 +47,20 @@ Route::post('register', [
 	'uses' => 'RegistrationController@postRegisterUser',
 	'as' => 'post_register_user'
 	]);
+
+
+Route::get('password-reset', function () {
+	return view('password_reset');
+})->name('password_reset');
+
+
+Route::post('password-reset', [
+	'uses' => 'PasswordController@postResetPassword',
+	'as' => 'post_reset_password'
+	]);
+
+
+Route::get('user/activity/confirm', [
+	'uses' => 'RegistrationController@userActivityConfirm',
+	'as' => 'user_activity_confirm'
+	]);

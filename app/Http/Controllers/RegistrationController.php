@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\User;
 use App\UserLog;
 use App\PasswordHistory;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ConfirmAccount;
+use App\UserConfirm;
+
 
 class RegistrationController extends Controller
 {
@@ -65,10 +69,19 @@ class RegistrationController extends Controller
             $log->host = $request->ip();
             $log->os = $_SERVER['HTTP_USER_AGENT'];
             $log->browser = $_SERVER['HTTP_USER_AGENT'];
-
             $log->save();
 
-    		return redirect()->route('login')->with('success', 'Successfully Created Account! You Can Now Login!');
+
+            // Save activation/confirmation code in database and send to user's email
+            $u_confirm = new UserConfirm();
+            $u_confirm->code = md5(uniqid($user->id_no, true));
+            $u_confirm->id_no = $user->id_no;
+            $u_confirm->expiration = time() + 1800;
+            $u_confirm->save();
+
+            Mail::to($user->email)->send(new ConfirmAccount($u_confirm->code, $u_confirm->id_no));
+
+    		return view('pages.register_success');
     	}
 
     	return redirect()->route('register')->with('error_msg', 'Registration Failed! Please Try Again Later.');
@@ -95,4 +108,38 @@ class RegistrationController extends Controller
 	private function idNoExists($number) {
 	    return User::whereIdNo($number)->exists();
 	}
+
+
+    /*
+     * Confirm and Activate user account
+     */
+    public function userActivityConfirm(Request $request)
+    {
+        $code = $request['c'];
+        $id = $request['i'];
+
+        $confirmation = UserConfirm::where(['code' => $code, 'id_no' => $id])->first();
+
+        // Check if the Confirmation code is valid and not expired
+        // if inValid
+        if(empty($confirmation)) {
+            return 'Invalid or Expired Activation/Confirmation Link!';
+        }
+
+        $user = User::whereIdNo($id)->first();
+        // Check if the user is already confirmed/active
+        if($user->active == 1) {
+            return redirect()->route('login')->with('info','Your account is already confirmed and active. You can now login.');
+        }
+
+        // Activate user
+        if(!empty($confirmation)) {
+            $user->active = 1;
+            if($user->save()) {
+                return 'Activation Successfull!';
+            }
+        }
+
+        return 'Error Occured! Please Try again.';
+    }
 }

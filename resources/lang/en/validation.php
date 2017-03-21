@@ -114,6 +114,9 @@ return [
             'required' => 'Last Name is required!',
             'max' => 'Last Name may not be longer than :max characters',
         ],
+        'email' => [
+            'required' => 'oh! Email Address is Required!',
+        ],
     ],
 
     /*
