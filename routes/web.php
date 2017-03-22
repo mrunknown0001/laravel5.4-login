@@ -9,7 +9,21 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::get('dashboard', function () {
 		return view('pages.dashboard');
-	});
+	})->name('dashboard');
+
+	Route::get('change-password', function () {
+		return view('pages.change-password');
+	})->name('change_password');
+
+	Route::post('change-password', [
+		'uses' => 'PasswordController@postChangePassword',
+		'as' => 'post_change_password'
+		]);
+
+	Route::get('user-log', [
+		'uses' => 'UserController@getUserLog',
+		'as' => 'get_user_log'
+		]);
 
 });
 

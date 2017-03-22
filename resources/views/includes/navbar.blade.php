@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Brand</a>
+      <p class="text-center"><a class="navbar-brand" href="{{ route('dashboard') }}"><i class="fa fa-tachometer fa-2x" aria-hidden="true"></i></a></p>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -39,6 +39,9 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Settings <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="#">Profile</a></li>
+            <li><a href="{{ route('change_password') }}">Change Password</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="{{ route('get_user_log') }}">Logs</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="{{ route('logout') }}">Logout</a></li>
           </ul>

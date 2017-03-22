@@ -26,7 +26,7 @@ return [
     ],
 
     'sparkpost' => [
-        'secret' => '7583b96350921758c202e77b9ad1a6bff3215ca3',
+        'secret' => env('MAIL_PASSWORD'),
     ],
 
     'stripe' => [
