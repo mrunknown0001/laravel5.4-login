@@ -12,9 +12,10 @@ class UserController extends Controller
     {
     	$logs = UserLog::whereUserIdNo(Auth::user()->id_no)
     			->select('user_id_no', 'action', 'host', 'os', 'browser', 'created_at')
-    			->orderBy('created_at', 'DESC')->get();
+    			->orderBy('created_at', 'DESC')
+    			->paginate(5);
 
     	// return view and embed the data for the user to view it
-    	return $logs;
+    	return view('pages.user_logs', ['logs' => $logs]);
     }
 }

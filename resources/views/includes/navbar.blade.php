@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <p class="text-center"><a class="navbar-brand" href="{{ route('dashboard') }}"><i class="fa fa-tachometer fa-2x" aria-hidden="true"></i></a></p>
+      <a class="navbar-brand" href="{{ route('dashboard') }}"><i class="fa fa-tachometer fa-2x" aria-hidden="true"></i></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
