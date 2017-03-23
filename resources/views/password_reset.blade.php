@@ -28,6 +28,11 @@
 							<button class="btn btn-primary">Reset Password</button>
 						</div>
 					</form>
+					<p>
+						<a href="{{ route('home') }}"><i class="fa fa-home" aria-hidden="true"></i></a> |
+						<a href="{{ route('login') }}">Login</a> |
+						<a href="{{ route('register') }}">Register</a>
+					</p>
 				</div>
 			</div>
 		</div>

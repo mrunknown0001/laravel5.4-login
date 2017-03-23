@@ -112,7 +112,9 @@
 						</div>
 
 					</form>
-					<p><a href="{{ route('login') }}">Login</a></p>
+					<p><a href="{{ route('home') }}"><i class="fa fa-home" aria-hidden="true"></i></a> |
+					<a href="{{ route('login') }}">Login</a> |
+					<a href="{{ route('password_reset') }}">Forgot Password?</a></p>
 				</div>
 			</div>
 		</div>

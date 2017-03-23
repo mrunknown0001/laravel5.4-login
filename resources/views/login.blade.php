@@ -43,8 +43,9 @@
 							<button type="submit" class="btn btn-primary">Login</button>
 						</div>
 					</form>
-					<p><a href="{{ route('register') }}">Register</a></p>
-					<p><a href="{{ route('password_reset') }}">Forgot Password?</a></p>
+					<p><a href="{{ route('home') }}"><i class="fa fa-home" aria-hidden="true"></i></a> | 
+					<a href="{{ route('register') }}">Register</a> |
+					<a href="{{ route('password_reset') }}">Forgot Password?</a></p>
 				</div>
 			</div>
 		</div>

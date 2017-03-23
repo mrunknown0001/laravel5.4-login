@@ -7,8 +7,8 @@ use App\User;
 use App\UserLog;
 use App\PasswordHistory;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ConfirmAccount;
-use App\UserConfirm;
+use App\Mail\SendActivationCode;
+use App\UserActivation;
 
 
 class RegistrationController extends Controller
@@ -33,8 +33,8 @@ class RegistrationController extends Controller
     		]);
 
     	// Assign request data to variables
+        $id_no = $this->generateIdNoNumber();
     	$username = strtolower($request['username']);
-    	$id_no = $this->generateIdNoNumber();
     	$firstname = ucwords($request['first_name']);
     	$lastname = ucwords($request['last_name']);
     	$birthdate = date('Y-m-d', strtotime($request['birthdate']));
@@ -45,8 +45,8 @@ class RegistrationController extends Controller
 
     	// Inserting Data in respected fields in database
     	$user = new User();
+        $user->id_no = $id_no;
     	$user->username = $username;
-    	$user->id_no = $id_no;
     	$user->first_name = $firstname;
     	$user->last_name = $lastname;
     	$user->birthdate = $birthdate;
@@ -58,13 +58,13 @@ class RegistrationController extends Controller
     	if($user->save()) {
             // Save the password in password histories
             $pass_history = new PasswordHistory();
-            $pass_history->user_id_no = $user->id_no;
+            $pass_history->user_id_no = $id_no;
             $pass_history->password = $password;
             $pass_history->save();
 
     		// This part is the user log section
             $log = new UserLog();
-            $log->user_id_no = $user->id_no;
+            $log->user_id_no = $id_no;
             $log->action = 'Account Creation/Registration';
             $log->host = $request->ip();
             $log->os = $_SERVER['HTTP_USER_AGENT'];
@@ -73,13 +73,14 @@ class RegistrationController extends Controller
 
 
             // Save activation/confirmation code in database and send to user's email
-            $u_confirm = new UserConfirm();
-            $u_confirm->code = md5(uniqid($user->id_no, true));
-            $u_confirm->id_no = $user->id_no;
-            $u_confirm->expiration = time() + 1800;
+            $code = mt_rand(100000, 999999);
+            $u_confirm = new UserActivation();
+            $u_confirm->user_id_no = $id_no;
+            $u_confirm->code = $code;
+            $u_confirm->expiration = time() + 86400; // code expiration is 1 day from time of registration, but not implemented
             $u_confirm->save();
 
-            Mail::to($user->email)->send(new ConfirmAccount($u_confirm->code, $u_confirm->id_no));
+            Mail::to($user->email)->send(new SendActivationCode($u_confirm->code));
 
     		return view('pages.register_success');
     	}
@@ -111,35 +112,33 @@ class RegistrationController extends Controller
 
 
     /*
-     * Confirm and Activate user account
+     * Confirm and Activate user account using activation code
      */
-    public function userActivityConfirm(Request $request)
+    public function userActivateAccount(Request $request)
     {
-        $code = $request['c'];
-        $id = $request['i'];
+        $this->validate($request, [
+            'activation_code' => 'required',
+            ]);
 
-        $confirmation = UserConfirm::where(['code' => $code, 'id_no' => $id])->first();
+        $code = $request['activation_code'];
 
-        // Check if the Confirmation code is valid and not expired
-        // if inValid
-        if(empty($confirmation)) {
-            return 'Invalid or Expired Activation/Confirmation Link!';
+        $act = UserActivation::whereCode($code)->first();
+        if(empty($act)) {
+            return redirect()->route('activate')->with('error_msg', 'Invalid Acivation Code!');
         }
 
-        $user = User::whereIdNo($id)->first();
-        // Check if the user is already confirmed/active
+        $user = User::whereIdNo($act->user_id_no)->first();
+
         if($user->active == 1) {
-            return redirect()->route('login')->with('info','Your account is already confirmed and active. You can now login.');
+            return redirect()->route('activate')->with('info', 'Account Already Activated!');
         }
 
-        // Activate user
-        if(!empty($confirmation)) {
-            $user->active = 1;
-            if($user->save()) {
-                return 'Activation Successfull!';
-            }
+        $user->active = 1;
+
+        if($user->save()) {
+            return redirect()->route('activate')->with('success', 'Successfully Activated Account!');
         }
 
-        return 'Error Occured! Please Try again.';
+        return redirect()->route('activate')->with('error_msg', 'Activation Failed! Try Again');
     }
 }

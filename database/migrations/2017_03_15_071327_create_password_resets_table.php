@@ -15,9 +15,11 @@ class CreatePasswordResetsTable extends Migration
     {
         Schema::create('password_resets', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('reset_code', 255);
             $table->string('user_id_no', 8);
-            $table->tinyInteger('active')->default(1);
+            $table->foreign('user_id_no')->references('id_no')->on('users');
+            $table->string('reset_code', 255);
+            $table->string('expiration', 21);
+            $table->tinyInteger('used')->default(0);
             $table->timestamps();
         });
     }

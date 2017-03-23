@@ -16,9 +16,12 @@ class ResetPassword extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public $id, $code;
+
+    public function __construct($id, $code)
     {
-        //
+        $this->id = $id;
+        $this->code = $code;
     }
 
     /**
@@ -28,7 +31,7 @@ class ResetPassword extends Mailable
      */
     public function build()
     {
-        return $this->from('webmaster@wbdvlpr.cf', 'Web Master Name')
+        return $this->from('do-not-reply@wbdvlpr.cf', 'Web Master Name')
             ->view('mails.resetpassword')
             ->subject('Password Reset');
     }

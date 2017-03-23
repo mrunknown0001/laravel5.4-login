@@ -16,6 +16,7 @@ class CreatePasswordHistoriesTable extends Migration
         Schema::create('password_histories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('user_id_no', 8);
+            $table->foreign('user_id_no')->references('id_no')->on('users');
             $table->string('password'); // Previous Hashed Password (bcrypt)
             $table->timestamps();
         });

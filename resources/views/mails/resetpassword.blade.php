@@ -2,5 +2,10 @@
 
 @section('content')
 <h3 class="text-center">Password Reset</h3>
-<a href=""><button class="btn btn-primary btn-lg">Reset Password Now!</button></a>
+<hr/>
+<a href="{{ url('/password/reset?c=' . $code . '&u=' . $id . '&t=' . uniqid($id)) }}">Reset Password Link</a>
+<hr/>
+<p>This reset link is valid for 30 minutes only from time of submittion.</p>
+
+<p>Web Master</p>
 @endsection

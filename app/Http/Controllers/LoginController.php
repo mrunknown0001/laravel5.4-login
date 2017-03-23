@@ -25,13 +25,16 @@ class LoginController extends Controller
 
 		if (Auth::attempt(['username' => $username, 'password' => $password], $remember)) {
 			// Authentication passed...
+            $id_no = Auth::user()->id_no;
+
             if(Auth::user()->active != 1) {
                 $log = new UserLog();
-                $log->user_id_no = Auth::user()->id_no;
+                $log->user_id_no = $id_no;
                 $log->action = 'Login attempt without activating account.';
                 $log->host = $request->ip();
                 $log->os = $_SERVER['HTTP_USER_AGENT'];
                 $log->browser = $_SERVER['HTTP_USER_AGENT'];
+                $log->save();
 
                 Auth::logout();
 
@@ -40,7 +43,7 @@ class LoginController extends Controller
 
 			// UserLog goes from this line
             $log = new UserLog();
-            $log->user_id_no = Auth::user()->id_no;
+            $log->user_id_no = $id_no;
             $log->action = 'Login';
             $log->host = $request->ip();
             $log->os = $_SERVER['HTTP_USER_AGENT'];

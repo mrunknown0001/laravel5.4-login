@@ -16,6 +16,7 @@ class CreateUserLogsTable extends Migration
         Schema::create('user_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('user_id_no', 8);
+            $table->foreign('user_id_no')->references('id_no')->on('users');
             $table->string('action', 255);
             $table->ipAddress('host')->nullable();
             $table->string('os', 255)->nullable();

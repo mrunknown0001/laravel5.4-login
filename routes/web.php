@@ -2,7 +2,7 @@
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
 
 
 Route::group(['middleware' => 'auth'], function () {
@@ -74,7 +74,22 @@ Route::post('password-reset', [
 	]);
 
 
-Route::get('user/activity/confirm', [
-	'uses' => 'RegistrationController@userActivityConfirm',
-	'as' => 'user_activity_confirm'
+Route::post('activate', [
+	'uses' => 'RegistrationController@userActivateAccount',
+	'as' => 'user_activate_account'
+	]);
+
+
+Route::get('activate', function () {
+	return view('pages.activate');
+})->name('activate');
+
+
+Route::get('password/reset', [
+	'uses' => 'PasswordController@resetPasswordLink'
+	]);
+
+Route::post('password/reset', [
+	'uses' => 'PasswordController@postPasswordReset',
+	'as' => 'post_password_reset'
 	]);
